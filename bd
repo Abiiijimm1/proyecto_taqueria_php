@@ -1,0 +1,759 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : localhost_3306
+ Source Server Type    : MySQL
+ Source Server Version : 80032 (8.0.32)
+ Source Host           : localhost:3306
+ Source Schema         : tacos
+
+ Target Server Type    : MySQL
+ Target Server Version : 80032 (8.0.32)
+ File Encoding         : 65001
+
+ Date: 15/02/2024 19:28:58
+*/
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for bebida
+-- ----------------------------
+DROP TABLE IF EXISTS `bebida`;
+CREATE TABLE `bebida`  (
+  `idBebidas` int NOT NULL AUTO_INCREMENT,
+  `nombreBebidas` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `precioBebida` double NOT NULL,
+  `descripcion` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `existencia` double NOT NULL,
+  `estatus` char(1) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT '1',
+  PRIMARY KEY (`idBebidas`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = COMPACT;
+
+-- ----------------------------
+-- Records of bebida
+-- ----------------------------
+INSERT INTO `bebida` VALUES (1, 'Gatorade', 25, 'sabor lima-limon', 12, '1');
+INSERT INTO `bebida` VALUES (2, 'Coca Cola 600ml', 18, '600 ml', 10, '1');
+INSERT INTO `bebida` VALUES (3, 'Coca Cola 2L', 35, '2L', 10, '1');
+INSERT INTO `bebida` VALUES (4, 'Coca Cola 3L', 48, '3L', 10, '0');
+INSERT INTO `bebida` VALUES (5, 'Jarritos mandarina 2L', 18, 'Refresco sabor mandarina 2L', 20, '1');
+INSERT INTO `bebida` VALUES (6, 'agua simple', 12, 'ninguna', 34, '1');
+INSERT INTO `bebida` VALUES (7, 'boing', 0, 'gratis!!!', 80, '1');
+INSERT INTO `bebida` VALUES (8, 'sangria', 23, 'deliciosa', 34, '1');
+
+-- ----------------------------
+-- Table structure for comanda
+-- ----------------------------
+DROP TABLE IF EXISTS `comanda`;
+CREATE TABLE `comanda`  (
+  `idComanda` int NOT NULL AUTO_INCREMENT,
+  `totalC` double NOT NULL,
+  `fecha` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  PRIMARY KEY (`idComanda`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = COMPACT;
+
+-- ----------------------------
+-- Records of comanda
+-- ----------------------------
+INSERT INTO `comanda` VALUES (1, 174, '18-01-2023');
+INSERT INTO `comanda` VALUES (2, 0, '');
+INSERT INTO `comanda` VALUES (3, 0, '18-01-2023');
+INSERT INTO `comanda` VALUES (4, 330, '18-01-2023');
+INSERT INTO `comanda` VALUES (5, 462, '19-01-2023');
+INSERT INTO `comanda` VALUES (6, 646, '19-01-2023');
+INSERT INTO `comanda` VALUES (7, 802, '19-01-2023');
+INSERT INTO `comanda` VALUES (8, 845, '19-01-2023');
+INSERT INTO `comanda` VALUES (9, 821, '19-01-2023');
+
+-- ----------------------------
+-- Table structure for detallecomanda
+-- ----------------------------
+DROP TABLE IF EXISTS `detallecomanda`;
+CREATE TABLE `detallecomanda`  (
+  `idDetalleComanda` int NOT NULL AUTO_INCREMENT,
+  `idComanda` int NOT NULL,
+  `clvPlatillos` int NOT NULL,
+  `idBebidas` int NOT NULL,
+  `cantidad` double NOT NULL,
+  `precio` double NOT NULL,
+  `idMesa` int NOT NULL,
+  `observaciones` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `cantidadB` double NOT NULL,
+  `precioB` double NOT NULL,
+  PRIMARY KEY (`idDetalleComanda`) USING BTREE,
+  INDEX `fkplatillos`(`clvPlatillos` ASC) USING BTREE,
+  INDEX `fkcomanda`(`idComanda` ASC) USING BTREE,
+  INDEX `fkmesa`(`idMesa` ASC) USING BTREE,
+  INDEX `fkbebida`(`idBebidas` ASC) USING BTREE,
+  CONSTRAINT `fkbebida` FOREIGN KEY (`idBebidas`) REFERENCES `bebida` (`idBebidas`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `fkcomanda` FOREIGN KEY (`idComanda`) REFERENCES `comanda` (`idComanda`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `fkmesa` FOREIGN KEY (`idMesa`) REFERENCES `mesa` (`idMesa`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `fkplatillos` FOREIGN KEY (`clvPlatillos`) REFERENCES `platillos` (`clvPlatillos`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 27 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = COMPACT;
+
+-- ----------------------------
+-- Records of detallecomanda
+-- ----------------------------
+INSERT INTO `detallecomanda` VALUES (14, 1, 5, 1, 1, 24, 3, 'Ninguna', 1, 18);
+INSERT INTO `detallecomanda` VALUES (15, 1, 1, 1, 2, 48, 3, 'Ninguna', 1, 18);
+INSERT INTO `detallecomanda` VALUES (16, 1, 3, 2, 2, 48, 3, 'Ninguna', 1, 18);
+INSERT INTO `detallecomanda` VALUES (17, 4, 4, 3, 2, 48, 2, 'Ninguna', 1, 18);
+INSERT INTO `detallecomanda` VALUES (18, 4, 2, 1, 3, 72, 2, 'Sin cebolla', 1, 18);
+INSERT INTO `detallecomanda` VALUES (19, 5, 2, 2, 3, 72, 2, 'Ninguna', 1, 18);
+INSERT INTO `detallecomanda` VALUES (20, 5, 3, 5, 1, 24, 2, 'Sin cebolla', 1, 18);
+INSERT INTO `detallecomanda` VALUES (21, 6, 3, 4, 2, 48, 5, 'Ninguna', 1, 18);
+INSERT INTO `detallecomanda` VALUES (22, 6, 7, 1, 4, 100, 5, 'Ninguna', 1, 18);
+INSERT INTO `detallecomanda` VALUES (23, 7, 3, 3, 3, 72, 2, 'Ninguna', 1, 18);
+INSERT INTO `detallecomanda` VALUES (24, 7, 2, 3, 2, 48, 2, 'Ninguna', 1, 18);
+INSERT INTO `detallecomanda` VALUES (25, 8, 7, 2, 1, 25, 1, 'Ninguna', 1, 18);
+INSERT INTO `detallecomanda` VALUES (26, 9, 9, 5, -1, -24, 2, 'Sin tortilla', 0, 0);
+
+-- ----------------------------
+-- Table structure for insumos
+-- ----------------------------
+DROP TABLE IF EXISTS `insumos`;
+CREATE TABLE `insumos`  (
+  `idInsumos` double NOT NULL AUTO_INCREMENT,
+  `nombreInsumo` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `cantidadInsumo` double NOT NULL,
+  `unidadInsumo` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  PRIMARY KEY (`idInsumos`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = COMPACT;
+
+-- ----------------------------
+-- Records of insumos
+-- ----------------------------
+INSERT INTO `insumos` VALUES (1, 'Tortillas', 50, 'Kg');
+INSERT INTO `insumos` VALUES (2, 'Carne', 100, 'Kg');
+INSERT INTO `insumos` VALUES (3, 'Salsa verde', 20, 'Litros');
+INSERT INTO `insumos` VALUES (4, 'Salsa Roja', 10, 'Litros');
+INSERT INTO `insumos` VALUES (5, 'Cebolla', 30, 'Kg');
+INSERT INTO `insumos` VALUES (6, 'Queso', 10, 'Pieza');
+
+-- ----------------------------
+-- Table structure for insumosplatillos
+-- ----------------------------
+DROP TABLE IF EXISTS `insumosplatillos`;
+CREATE TABLE `insumosplatillos`  (
+  `idInsumosPla` int NOT NULL AUTO_INCREMENT,
+  `clvPlatillos` int NOT NULL,
+  `idInsumos` double NOT NULL,
+  `cantUnidadUsar` double NOT NULL,
+  PRIMARY KEY (`idInsumosPla`) USING BTREE,
+  INDEX `fkplatillosIP`(`clvPlatillos` ASC) USING BTREE,
+  INDEX `fkinsumosIP`(`idInsumos` ASC) USING BTREE,
+  CONSTRAINT `fkinsumosIP` FOREIGN KEY (`idInsumos`) REFERENCES `insumos` (`idInsumos`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `fkplatillosIP` FOREIGN KEY (`clvPlatillos`) REFERENCES `platillos` (`clvPlatillos`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = COMPACT;
+
+-- ----------------------------
+-- Records of insumosplatillos
+-- ----------------------------
+INSERT INTO `insumosplatillos` VALUES (1, 1, 1, 0.06);
+INSERT INTO `insumosplatillos` VALUES (2, 1, 2, 0.2);
+INSERT INTO `insumosplatillos` VALUES (3, 1, 5, 0.05);
+INSERT INTO `insumosplatillos` VALUES (4, 1, 2, 2);
+INSERT INTO `insumosplatillos` VALUES (5, 1, 2, 2);
+INSERT INTO `insumosplatillos` VALUES (6, 1, 2, 2);
+INSERT INTO `insumosplatillos` VALUES (7, 2, 2, 2);
+INSERT INTO `insumosplatillos` VALUES (8, 1, 1, 2);
+INSERT INTO `insumosplatillos` VALUES (9, 1, 1, 2);
+INSERT INTO `insumosplatillos` VALUES (10, 2, 1, 5);
+INSERT INTO `insumosplatillos` VALUES (11, 4, 6, 6);
+INSERT INTO `insumosplatillos` VALUES (12, 4, 4, 12);
+INSERT INTO `insumosplatillos` VALUES (13, 7, 3, 2);
+INSERT INTO `insumosplatillos` VALUES (14, 9, 3, 2);
+INSERT INTO `insumosplatillos` VALUES (15, 2, 4, 2);
+
+-- ----------------------------
+-- Table structure for mesa
+-- ----------------------------
+DROP TABLE IF EXISTS `mesa`;
+CREATE TABLE `mesa`  (
+  `idMesa` int NOT NULL AUTO_INCREMENT,
+  `numMesa` int NOT NULL,
+  PRIMARY KEY (`idMesa`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = COMPACT;
+
+-- ----------------------------
+-- Records of mesa
+-- ----------------------------
+INSERT INTO `mesa` VALUES (1, 1);
+INSERT INTO `mesa` VALUES (2, 2);
+INSERT INTO `mesa` VALUES (3, 3);
+INSERT INTO `mesa` VALUES (4, 4);
+INSERT INTO `mesa` VALUES (5, 5);
+INSERT INTO `mesa` VALUES (6, 6);
+
+-- ----------------------------
+-- Table structure for platillos
+-- ----------------------------
+DROP TABLE IF EXISTS `platillos`;
+CREATE TABLE `platillos`  (
+  `clvPlatillos` int NOT NULL AUTO_INCREMENT,
+  `nombrePlatillo` varchar(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `precioPlatillo` double NOT NULL,
+  PRIMARY KEY (`clvPlatillos`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = COMPACT;
+
+-- ----------------------------
+-- Records of platillos
+-- ----------------------------
+INSERT INTO `platillos` VALUES (1, 'Tacos campechanos', 24);
+INSERT INTO `platillos` VALUES (2, 'Tacos de bistec', 24);
+INSERT INTO `platillos` VALUES (3, 'Tacos al pastor', 24);
+INSERT INTO `platillos` VALUES (4, 'Tacos de alambre', 24);
+INSERT INTO `platillos` VALUES (5, 'Tacos de carnitas', 24);
+INSERT INTO `platillos` VALUES (6, 'Tacos de suadero', 24);
+INSERT INTO `platillos` VALUES (7, 'Tacos de lengua', 25);
+INSERT INTO `platillos` VALUES (8, 'Volcan', 27);
+INSERT INTO `platillos` VALUES (9, 'Tacos de tripa', 24);
+
+-- ----------------------------
+-- Table structure for rol
+-- ----------------------------
+DROP TABLE IF EXISTS `rol`;
+CREATE TABLE `rol`  (
+  `idrol` int NOT NULL AUTO_INCREMENT,
+  `rol` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `descripcion` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`idrol`) USING BTREE,
+  UNIQUE INDEX `unique_rol`(`rol` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of rol
+-- ----------------------------
+INSERT INTO `rol` VALUES (1, 'cliente', 'Puede cotizar platilllos, realizar pedidos y hacer compras');
+INSERT INTO `rol` VALUES (2, 'SUPERVISOR', 'Actualizar, Eliminar, Leer, Agregar, a todos los catalogos');
+INSERT INTO `rol` VALUES (3, 'Cajero', NULL);
+INSERT INTO `rol` VALUES (4, 'Administrador', NULL);
+
+-- ----------------------------
+-- Table structure for usuario
+-- ----------------------------
+DROP TABLE IF EXISTS `usuario`;
+CREATE TABLE `usuario`  (
+  `noUsuario` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `apellido1` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `apellido2` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `user` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `password` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `email` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `idrol` int NOT NULL,
+  PRIMARY KEY (`noUsuario`) USING BTREE,
+  INDEX `fk_usuario_rol`(`idrol` ASC) USING BTREE,
+  CONSTRAINT `fk_usuario_rol` FOREIGN KEY (`idrol`) REFERENCES `rol` (`idrol`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of usuario
+-- ----------------------------
+INSERT INTO `usuario` VALUES (1, 'Luis Alfredo', 'Martinez', 'Santiago', 'Fredy', 'admin', 'fredy@gmail.com', 4);
+INSERT INTO `usuario` VALUES (2, 'Vane', 'Cruz', 'Huitron', 'Vane', '123#', 'vane@gmail.com', 1);
+
+-- ----------------------------
+-- Procedure structure for ActualizaProducto1
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `ActualizaProducto1`;
+delimiter ;;
+CREATE PROCEDURE `ActualizaProducto1`(modifi VARCHAR (255),
+p_NombreP VARCHAR(255),
+p_Precio VARCHAR(45),
+p_descripcion VARCHAR(255),
+p_marca VARCHAR(255),
+p_categoria VARCHAR(255))
+BEGIN
+UPDATE tblproductos SET 
+prodNombre = p_NombreP,
+prodPrecio = p_Precio,
+descripcion = p_descripcion,
+idmarcas=(SELECT idmarca FROM tlbmarca WHERE nombreMarca=p_marca LIMIT 1),
+idcategoriap=(SELECT idCategoria FROM tlbcategoria WHERE nombreCategoria = p_categoria LIMIT 1)
+WHERE prodNombre = modifi;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for actualizarBebidas
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `actualizarBebidas`;
+delimiter ;;
+CREATE PROCEDURE `actualizarBebidas`(p_nombreBebidas VARCHAR(255), p_precioBebidas VARCHAR(255), p_descripcionBebidas VARCHAR(255),
+p_existenciaBebidas VARCHAR(255), p_id_a_modificar INTEGER)
+BEGIN
+UPDATE bebida SET 
+bebida.nombreBebidas = p_nombreBebidas,
+bebida.descripcion = p_descripcionBebidas, 
+bebida.precioBebida = p_precioBebidas,
+bebida.existencia = p_existenciaBebidas
+WHERE bebida.idBebidas = p_id_a_modificar;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for asignatt
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `asignatt`;
+delimiter ;;
+CREATE PROCEDURE `asignatt`(p_clvVenta INT)
+BEGIN
+DECLARE tot DOUBLE;
+select sum(precio) INTO tot from detalleventa WHERE clvVenta =p_clvVenta;
+UPDATE venta SET total=tot WHERE idVenta=p_clvVenta;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for buscaCarcteriticas
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `buscaCarcteriticas`;
+delimiter ;;
+CREATE PROCEDURE `buscaCarcteriticas`(nombre_producto VARCHAR(50))
+BEGIN 
+SELECT p.prodNombre,c.nombre,cp.dato FROM tlbcaracproducto cp
+INNER JOIN tblproductos p on idProducto=idProductoc
+INNER JOIN tlbcaracteristicas c on idcaracteristicas=idcaracteristica
+where prodNombre like nombre_producto;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for buscarBebidas
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `buscarBebidas`;
+delimiter ;;
+CREATE PROCEDURE `buscarBebidas`(p_valor VARCHAR(50))
+BEGIN
+SELECT * FROM bebidas
+WHERE nombreBebidas LIKE p_valor
+ORDER BY nombreBebidas
+LIMIT 3;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for buscarComanda
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `buscarComanda`;
+delimiter ;;
+CREATE PROCEDURE `buscarComanda`(p_valor VARCHAR(255))
+BEGIN
+SELECT * FROM comanda WHERE fecha LIKE p_valor
+ORDER BY fecha LIMIT 2;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for buscarInsumos
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `buscarInsumos`;
+delimiter ;;
+CREATE PROCEDURE `buscarInsumos`(p_valor VARCHAR(50))
+BEGIN
+SELECT * FROM insumos
+WHERE nombreInsumo LIKE p_valor
+ORDER BY nombreInsumo
+LIMIT 3;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for buscarInsumosPlatillos
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `buscarInsumosPlatillos`;
+delimiter ;;
+CREATE PROCEDURE `buscarInsumosPlatillos`(p_valor VARCHAR(50))
+BEGIN
+SELECT * FROM insumosplatillos
+INNER JOIN platillos
+ON insumosplatillos.clvPlatillos = platillos.clvPlatillos
+INNER JOIN insumos
+ON insumosplatillos.idInsumos = insumos.idInsumos
+WHERE nombrePlatillo LIKE p_valor
+OR nombreInsumo LIKE p_valor
+ORDER BY nombreInsumo
+LIMIT 3;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for buscarMesas
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `buscarMesas`;
+delimiter ;;
+CREATE PROCEDURE `buscarMesas`(p_valor VARCHAR(50))
+BEGIN
+SELECT * FROM mesa
+WHERE numMesa LIKE p_valor
+ORDER BY numMesa
+LIMIT 3;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for buscarPlatillos
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `buscarPlatillos`;
+delimiter ;;
+CREATE PROCEDURE `buscarPlatillos`(p_valor VARCHAR(50))
+BEGIN
+SELECT * FROM platillos
+WHERE nombrePlatillo LIKE p_valor
+ORDER BY nombrePlatillo
+LIMIT 3;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for busca_producto
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `busca_producto`;
+delimiter ;;
+CREATE PROCEDURE `busca_producto`(nombre_producto VARCHAR(50))
+BEGIN
+SELECT p.prodNombre,p.prodPrecio,p.descripcion,m.nombreMarca,c.nombreCategoria FROM tblproductos p
+INNER JOIN tlbmarca m ON idmarca=idmarcas
+INNER JOIN tlbcategoria c ON idCategoria=idcategoriap
+WHERE prodNombre like nombre_producto;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for eliminarBeb
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `eliminarBeb`;
+delimiter ;;
+CREATE PROCEDURE `eliminarBeb`(b_idBebidas INT)
+BEGIN
+DELETE FROM bebida
+WHERE idBebidas = b_idBebidas;
+
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for Ingreso
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `Ingreso`;
+delimiter ;;
+CREATE PROCEDURE `Ingreso`(useri VARCHAR(255),pasword VARCHAR(255))
+BEGIN
+DECLARE inicioUser VARCHAR(255);
+DECLARE bty VARCHAR(255);
+SELECT usuarios INTO inicioUser FROM usuario WHERE usuarios=useri;
+SELECT contrasena INTO bty FROM usuario WHERE contrasena=pasword;
+if(bty=pasword AND inicioUser=useri ) THEN
+SELECT('HOLA bb');
+ELSE
+SELECT('no entras');
+END IF;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for InsertarCaracteriticas
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `InsertarCaracteriticas`;
+delimiter ;;
+CREATE PROCEDURE `InsertarCaracteriticas`(p_nombre varchar(255))
+BEGIN
+INSERT tlbcaracteristicas VALUES(DEFAULT,p_nombre);
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for InsertarCaracteriticasprod
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `InsertarCaracteriticasprod`;
+delimiter ;;
+CREATE PROCEDURE `InsertarCaracteriticasprod`(p_nombre varchar(255),
+p_nombreCaracteristicas VARCHAR(255),
+p_dato VARCHAR(255))
+BEGIN
+INSERT tlbcaracproducto VALUES(
+DEFAULT,
+(SELECT idProducto FROM tblproductos WHERE prodNombre=p_nombre LIMIT 1),
+(SELECT idcaracteristicas FROM tlbcaracteristicas WHERE nombre=p_nombreCaracteristicas LIMIT 1),
+p_dato);
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for insertarComanda
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `insertarComanda`;
+delimiter ;;
+CREATE PROCEDURE `insertarComanda`(p_fecha VARCHAR(255))
+BEGIN
+INSERT comanda VALUES(DEFAULT, '0', p_fecha);
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for insertarDC
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `insertarDC`;
+delimiter ;;
+CREATE PROCEDURE `insertarDC`(p_comanda INT,
+p_platillo VARCHAR(100),
+p_bebida VARCHAR(15),
+p_cantidadp DOUBLE,
+p_preciop DOUBLE,
+p_mesa INT,
+p_obsev VARCHAR(255),
+p_cantidadb DOUBLE,
+p_preciob DOUBLE)
+BEGIN
+INSERT detallecomanda VALUES(
+DEFAULT,
+p_comanda,
+(SELECT platillos.clvPlatillos FROM platillos WHERE platillos.nombrePlatillo=p_platillo),
+(SELECT bebidas.idBebidas FROM bebidas WHERE bebidas.nombreBebidas=p_bebida),
+p_cantidadp,
+(SELECT (platillos.precioPlatillo*p_cantidadp) FROM platillos WHERE nombrePlatillo=p_platillo),
+(SELECT mesa.idMesa FROM mesa WHERE mesa.numMesa=p_mesa),
+p_obsev,
+p_cantidadb,
+(SELECT (bebidas.precioBebida*p_cantidadb) FROM bebidas WHERE nombreBebidas=p_bebida));
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for insertarInsumos
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `insertarInsumos`;
+delimiter ;;
+CREATE PROCEDURE `insertarInsumos`(p_nombre VARCHAR(255),
+p_cantidad DOUBLE,
+p_unidad VARCHAR(255))
+BEGIN
+INSERT insumos VALUES(
+DEFAULT,
+p_nombre,
+p_cantidad,
+p_unidad);
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for insertarInsumosPlatillos
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `insertarInsumosPlatillos`;
+delimiter ;;
+CREATE PROCEDURE `insertarInsumosPlatillos`(p_platillo VARCHAR(100),
+p_insumos VARCHAR(255),
+p_cantidadusar DOUBLE)
+BEGIN
+INSERT insumosplatillos VALUES (
+DEFAULT,
+(SELECT platillos.clvPlatillos FROM platillos WHERE platillos.nombrePlatillo=p_platillo),
+(SELECT insumos.idInsumos FROM insumos WHERE insumos.nombreInsumo=p_insumos),
+p_cantidadusar);
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for insertVenta
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `insertVenta`;
+delimiter ;;
+CREATE PROCEDURE `insertVenta`(p_dia VARCHAR(255))
+BEGIN 
+INSERT venta VALUES(DEFAULT,'0',p_dia);
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for IsertarPr
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `IsertarPr`;
+delimiter ;;
+CREATE PROCEDURE `IsertarPr`(p_prodNombre varchar(100),
+prodPrecio varchar(45),
+p_descripcion varchar(255),
+p_Nombremarcas VARCHAR(255),
+p_categoriap VARCHAR(255),
+p_prodStock int)
+BEGIN
+INSERT tblproductos VALUES(
+DEFAULT,
+p_prodNombre,prodPrecio,
+p_descripcion,
+(SELECT idmarca FROM tlbmarca WHERE nombreMarca=p_Nombremarcas LIMIT 1),
+(SELECT idCategoria FROM tlbcategoria WHERE nombreCategoria=p_categoriap LIMIT 1),
+p_prodStock) ;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for masbebidas
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `masbebidas`;
+delimiter ;;
+CREATE PROCEDURE `masbebidas`(p_id VARCHAR(15),
+p_nombre VARCHAR(100),
+p_precio  DOUBLE,
+p_descripcion VARCHAR(255),
+p_existencia DOUBLE)
+BEGIN
+INSERT bebidas VALUES(
+p_id, 
+p_nombre, 
+p_precio,
+p_descripcion,
+p_existencia);
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for masMesas
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `masMesas`;
+delimiter ;;
+CREATE PROCEDURE `masMesas`(p_numero INT)
+BEGIN
+INSERT mesa VALUES(
+DEFAULT,
+p_numero);
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for masplatillos
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `masplatillos`;
+delimiter ;;
+CREATE PROCEDURE `masplatillos`(p_nombre VARCHAR(255),
+p_precio DOUBLE)
+BEGIN
+INSERT platillos VALUES(
+DEFAULT,
+p_nombre, 
+p_precio);
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for mostrarOrden
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `mostrarOrden`;
+delimiter ;;
+CREATE PROCEDURE `mostrarOrden`(p_valor VARCHAR(50))
+BEGIN
+DECLARE ultimo INT;
+SELECT detallecomanda.idDetalleComanda AS 'COMANDA', 
+detallecomanda.idComanda AS 'VENTA', 
+detallecomanda.idMesa AS 'MESA',
+detallecomanda.clvPlatillos AS 'PLATILLO', 
+detallecomanda.cantidad AS 'CANTIDAD PLATILLO', 
+detallecomanda.precio AS 'PRECIO PLATILLO',
+detallecomanda.idBebidas AS 'BEBIDA', 
+detallecomanda.cantidadB AS 'CANTIDAD BEBIDA', 
+detallecomanda.precioB AS 'PRECIO BEBIDA', 
+detallecomanda.observaciones AS 'OBSERV.'
+FROM detallecomanda 
+WHERE idComanda = (SELECT @ultimo := idComanda FROM detallecomanda ORDER BY idComanda DESC limit 1);
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for mostrarpV
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `mostrarpV`;
+delimiter ;;
+CREATE PROCEDURE `mostrarpV`(p_clventa INT)
+BEGIN
+SELECT tblproductos.prodNombre, detalleventa.cantidad,tblproductos.prodPrecio ,detalleventa.precio, detalleventa.clvVenta FROM detalleventa
+INNER JOIN tblproductos ON idProducto=clv_producto 
+INNER JOIN venta on idVenta=clvVenta WHERE clvVenta=p_clventa;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for total
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `total`;
+delimiter ;;
+CREATE PROCEDURE `total`(p_valor INT)
+BEGIN
+DECLARE total int;
+UPDATE comanda SET totalC = (SELECT @total := (SUM(precio) + SUM(precioB)) FROM detallecomanda)
+WHERE idComanda = p_valor;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for total55
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `total55`;
+delimiter ;;
+CREATE PROCEDURE `total55`(p_producto VARCHAR(255),p_cantidad DOUBLE,p_clventa INT)
+BEGIN
+DECLARE existencia_stok double;
+SELECT tblproductos.prodStock INTO existencia_stok FROM tblproductos WHERE tblproductos.prodNombre=p_producto;
+
+IF existencia_stok >= p_cantidad AND p_cantidad>0 THEN
+INSERT detalleventa VALUES(
+DEFAULT,
+(SELECT  tblproductos.idProducto FROM tblproductos WHERE prodNombre=p_producto),
+p_clventa,
+p_cantidad,
+(SELECT (tblproductos.prodPrecio*p_cantidad) FROM tblproductos WHERE prodNombre=p_producto));
+
+UPDATE tblproductos SET prodStock=prodStock-p_cantidad WHERE prodNombre=p_producto;
+ELSE
+SELECT 'No Vender' AS respuesta;
+END IF;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for totalp
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `totalp`;
+delimiter ;;
+CREATE PROCEDURE `totalp`(p_producto VARCHAR(255),p_cantidad DOUBLE,p_clventa INT)
+BEGIN
+INSERT detalleventa VALUES(
+DEFAULT,
+(SELECT  tblproductos.idProducto FROM tblproductos WHERE prodNombre=p_producto),
+p_clventa,
+p_cantidad,
+(SELECT (tblproductos.prodPrecio*p_cantidad) FROM tblproductos WHERE prodNombre=p_producto));
+END
+;;
+delimiter ;
+
+SET FOREIGN_KEY_CHECKS = 1;
